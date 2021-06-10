@@ -21,4 +21,10 @@ Comparator<Apple> byWeight = new Comparator<Apple>(){
 ```java
 Comparator<Apple> byWeight = (Apple a1, Apple a2) -> a1.getWeight().compareTo(a2.getWeight());
 ```
-
+- 람다 표현식에는 return이 함축되어 있으므로 return 문을 명시적으로 사용하지 않아도 된다.
+- 람다 표현식(expression)
+  - (param) -> "expression"
+  - (param) -> 42
+- 람다 구문(statement)
+  - (param) -> { return "statements"; }
+  - (param) -> { return "statements" + i; }
