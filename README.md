@@ -17,6 +17,7 @@ Comparator<Apple> byWeight = new Comparator<Apple>(){
     return a1.getWeight().compareTo(a2.getWeight());
     }
 }
+```
 - 람다 코드
 ```java
 Comparator<Apple> byWeight = (Apple a1, Apple a2) -> a1.getWeight().compareTo(a2.getWeight());
