@@ -9,3 +9,16 @@
 - CHAPTER3 - 람다표현식
   - 람다표현식은 익명클래스처럼 이름이 없는 함수면서 메서드를 인수로 전달할수 있으므로 익명클래스와 비슷
   - 즉, 메서드로 전달할수 있는 익명함수를 단순화한것.
+  
+- 기존 코드(익명클래스 사용)
+```java
+Comparator<Apple> byWeight = new Comparator<Apple>(){
+  public int compare(Apple a1, Apple a2){
+    return a1.getWeight().compareTo(a2.getWeight());
+    }
+}
+- 람다 코드
+```java
+Comparator<Apple> byWeight = (Apple a1, Apple a2) -> a1.getWeight().compareTo(a2.getWeight());
+```
+
