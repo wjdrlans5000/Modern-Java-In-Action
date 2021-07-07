@@ -30,4 +30,11 @@ Comparator<Apple> byWeight = (Apple a1, Apple a2) -> a1.getWeight().compareTo(a2
   - (param) -> { return "statements"; }
   - (param) -> { return "statements" + i; }
   
-- 
+- 한개의 메소드 호출은 중괄호로 감쌀 필요가 없음
+    - process(() -> System.out.println("lambda"));
+
+- @FunctionalInterface
+    - 함수형 인터페이스임을 가리키는 어노테이션
+    - @FunctionalInterface를 선언했지만 실제로 함수형 인터페이스가 아니면 컴파일러가 에러 발생
+
+ 
