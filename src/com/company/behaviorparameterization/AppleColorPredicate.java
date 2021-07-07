@@ -1,4 +1,4 @@
-package com.company;
+package com.company.behaviorparameterization;
 
 //초록색 사과만 선택하는 프레디케이트
 //초록색 사과만 선택하는 전략

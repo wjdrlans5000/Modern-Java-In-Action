@@ -1,4 +1,4 @@
-package com.company;
+package com.company.behaviorparameterization;
 
 public class Apple {
 

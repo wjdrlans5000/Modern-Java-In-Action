@@ -1,4 +1,4 @@
-package com.company;
+package com.company.behaviorparameterization;
 
 //선택조건을 결정하는 인터페이스 정의
 //참 또는 거짓을 번환하는 함수를 프레디케이트라고 한다.

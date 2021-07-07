@@ -1,4 +1,4 @@
-package com.company;
+package com.company.behaviorparameterization;
 
 import java.time.Clock;
 import java.util.ArrayList;
