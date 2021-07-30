@@ -18,6 +18,7 @@ public class ExecuteAround {
     String oneLine = processFile((BufferedReader b) -> b.readLine());
     System.out.println(oneLine);
 
+    //한번에 두행을 읽도록
     String twoLines = processFile((BufferedReader b) -> b.readLine() + b.readLine());
     System.out.println(twoLines);
   }
@@ -29,11 +30,13 @@ public class ExecuteAround {
   }
 
   public static String processFile(BufferedReaderProcessor p) throws IOException {
+    //try-with-resources 구문 사용 - 자원을 명시적으로 닫을 필요가 없음
     try (BufferedReader br = new BufferedReader(new FileReader(FILE))) {
       return p.process(br);
     }
   }
 
+  //함수형 인터페이스 정의
   public interface BufferedReaderProcessor {
 
     String process(BufferedReader b) throws IOException;
