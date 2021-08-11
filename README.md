@@ -74,4 +74,18 @@ Comparator<Apple> byWeight = (Apple a1, Apple a2) -> a1.getWeight().compareTo(a2
         따라서, 자바 구현에서는 원래 변수에 접근을 허용하는것이 아니라 자유 지역번수의 복사본을 제공한다.
         따라서, 복사본의 값이 바뀌지 않아야하므로 지역변수에는 한번만 값을 할당해야 한다는 제약이 생긴것이다. 
         - 지역변수의 제약때문에 외부 변수를 변환시키는 일반적인 명령형프로그래밍 패턴에 제동을 걸수 있다.
-        
+
+- 메서드 참조
+    - 메서드 참조를 이용하면 기존의 메서드 정의를 활용해서 람다처럼 전달
+    - 때로는 람다표현식보다 메서드 참조를 사용하는것이 더 가독성이 좋다
+    - 클레스네임::메서드네임
+    ```java
+      inventory.sort((Apple a1, Apple a2) -> a1.getWetight().compareTo(a2.getWeigth()));
+      inventory.sort(comparing(Apple::getWeight));
+    ```
+- 생성자 참조
+    - ClassName::new 처럼 기존 생성자의참조를 만들수 있다.
+    ```java
+      Supplier<Apple> c1 = Apple::new;
+    ```
+  
