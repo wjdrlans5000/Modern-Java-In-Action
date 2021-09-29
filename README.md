@@ -38,8 +38,8 @@ Comparator<Apple> byWeight = (Apple a1, Apple a2) -> a1.getWeight().compareTo(a2
     - @FunctionalInterface를 선언했지만 실제로 함수형 인터페이스가 아니면 컴파일러가 에러 발생
 
 - 함수형 인터페이스 사용
-    - 함수형 인터페이스는 오직 하나의 추상메서드를 지정
-    - 함수형 인터페이스의 추상 메서드는 람다표현식의 시그니처를 묘사한다.
+    - 함수형 인터페이스는 오직 하나의 추상메서드를 정의하는 인터페이스
+    - 함수형 인터페이스의 추상 메서드는 람다표현식의 시그니처를 정의한다.
     - 함수형 인터페이스의 추상 메서드 시그니처를 함수 디스크립터 라고 한다.
     - 자바 API의 대표적인 함수형 인터페이스
         - Comparable,Runnable, Callable등
@@ -89,3 +89,66 @@ Comparator<Apple> byWeight = (Apple a1, Apple a2) -> a1.getWeight().compareTo(a2
       Supplier<Apple> c1 = Apple::new;
     ```
   
+- 람다표현식을 조합할수 있는 유용한 메서드
+    - Comparator 조합
+        - Comparator.comparing를 이용해서 비교에 사용할 키를 추출하는 Function 기반의 Comparator를 반환 할수 있다.
+        ```java
+          Comparator<Apple> c = Comparator.comparing(Apple::getWeight)
+        ```
+        - reverse라는 디폴트 메서드를 사용하여 내림차순 정렬
+        ```java
+          inventory.sort(comparing(Apple::getWeight).reversed());
+        ```
+        - thenComparing 사용하여 Comperator 연결(두번째 Comparator 만들기) 
+        ```java
+          inventory.sort(comparing(Apple::getWeight).reversed().thenComparing(Apple::getCountry));
+        ```
+    - Predicate 조합
+        - 복잡한 프레디케이트를 만들수 있도록 negate, and, or 세가지 메서드를 제공
+        - '빨간색이 아닌 사과' 처럼 특정 프레디케이트를 반전시킬떄 negate 메서드를 사용
+        ```java
+          Predicata<Apple> notRedApple = redApple.negate();
+        ```
+        - '빨간색이면서 무거운(150 이상) 사과' and  메서드 사용
+        ```java
+          Predicate<Apple> redAndHeavyApple = redApple.and(apple -> apple.getWeight() > 150);
+        ```
+        - '빨간색이면서 무거운(150 이상) 사과' 또는 '그냥 녹색사과' or 메서드 사용
+        ```java
+          Predicate<Apple> redAndHeavyAppleOrGreen = redApple.and(apple -> apple.getWeight() > 150).or(apple -> GREEN.equals(a.getColor()));
+        ```
+        - 이렇게 단순한 람다표현식을 조합해서 더 복잡한 람다 표현식을 만들수 있다.
+    - Function 조합
+        - Function 인터페이스를 반환하는 andThen, compose 두가지 디폴트 메서드를 제공
+        - andThen 메서드는 주어진 함수를 먼저 적용한 결과를 다른 함수의 입력으로 전달하는 함수를 반환한다.
+        ```java
+          Function<Integer,Integer> f = x -> x+1;
+          Function<Integer,Integer> g = x -> x*2;
+          Function<Integer,Integer> h = f.andThen(g);
+          int result = h.apply(1); //4를 반환
+        ```
+        - compose 메서드는 인수로 주어진 함수를 먼저 실행한 다음에 그 결과를 외부 함수의 인수로 제공한다.
+        ```java
+          Function<Integer,Integer> f = x -> x+1;
+          Function<Integer,Integer> g = x -> x*2;
+          Function<Integer,Integer> h = f.compose(g);
+          int result = h.apply(1); //3을 반환
+        ```
+        ```java
+          public class Letter{
+              public static String addHeader(String text){
+                  return "FROM RAOUL, MARIO AND ALAN: " + text;
+              }       
+              public static String addFooter(String text){
+                  return text + " Kind regards";
+              }       
+              public static String checkSpelling(String text){
+                  return text.replaceAll("labda", "lambda");
+              }       
+              
+          }
+      
+          Function<String, String> addHeader = Letter::addHeader;
+          Function<String, String> transformationPipeline = addHeader.andThen(Letter::checkSpelling).andThen(Letter::addFooter);
+        ```
+        
