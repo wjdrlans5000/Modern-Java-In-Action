@@ -1,12 +1,12 @@
 # 모던자바 인 액션
 
-- CHAPTER2 - 동작 파라미터화 코드 전달하기
+## CHAPTER2 - 동작 파라미터화 코드 전달하기
   - 동작 파라미터화(behavior parameterization)을 이용하면 자주 바뀌는 요구사항에 효과적으로 대응할 수 있다.
   - 동작 파라미터화란 아직은 어떻게 실행할 것인지 결정하지 않은 코드블록을 의미.
   - 익명클래스 : 이름이 없는 클래스, 클래스 선언과 인스턴스화를 동시에 할수 있다. 즉, 즉석에서 필요한 구현을 만들어 사용할수 있음.
   - 람다표현식을 사용하여 더 간단하게 구현할수 있음.
 
-- CHAPTER3 - 람다표현식
+## CHAPTER3 - 람다표현식
   - 람다표현식은 익명클래스처럼 이름이 없는 함수면서 메서드를 인수로 전달할수 있으므로 익명클래스와 비슷
   - 즉, 메서드로 전달할수 있는 익명함수를 단순화한것.
   
@@ -151,4 +151,44 @@ Comparator<Apple> byWeight = (Apple a1, Apple a2) -> a1.getWeight().compareTo(a2
           Function<String, String> addHeader = Letter::addHeader;
           Function<String, String> transformationPipeline = addHeader.andThen(Letter::checkSpelling).andThen(Letter::addFooter);
         ```
-        
+
+## CHAPTER4 - 스트림 소개
+  - 데이터 컬렉션 반복을 선언형으로 처리할수 있도록 지원하는 기능
+  - 멀티스레드 코드를 구현하지 않아도 데이터를 투명하게 병렬로 처리할수 있다.
+  ```java
+    List<String> names = menu.stream()
+                            .filter(dish -> dish.getCalories() < 400) // 400칼로리 이하의 요리 선택
+                            .sorted(comparing(Dish::getCalories)) // 칼로리로 요리정렬
+                            .map(Dish::getName) // 요리명추출
+                            .collect(toList()); // 모든 요리명을 리스트에 저장
+  ```
+  - stream()울 parallelStream()으로 바꾸면 이 코드를 멀티코어 아키텍처에서 병렬로 실행할수 있다.
+  - filter,sorted,map,collect와 같은 여러 빌딩 블록연산을 연결하여 복잡한 데이터 처리 파이프라인을 만들수 있다.
+  - 위와같은 연산들은 고수준 빌딩 븡록 으로 이루어져 있으므로 특정 스레드 모델에 제한되지않고 자유롭게 사용할수 있다.
+  결과적으로 데이터 처리과정을 병렬화하면서 스레드와 락을 걱정할 필요가 없다.
+  ```java
+    List<Dish.Type, List<Dish>> dishsByType = menu.stream().collect(groupingBy(Dish::getType));
+  ```
+  - 위 예제는 Map 내부의 형식에 따라 요리를 그룹화하여 다음과 같은 결과가 형태가 나온다.
+  ```
+    {
+      FISH=[prawns, salmon],
+      OTHER=[french fires, rice, season fruit, pizza],
+      MEAT=[pork,beef,chicken]
+    }
+  ```
+  - 스트림이란 데이터 처리 연산을 지원하도록 소스에서 추출된 연속된 요소
+  - 반복자를 이용해서 명시적으로 반복하는 컬렉션과 달리 스트림은 내부 반복을 지원한다
+  - 컬렉션과 스트림의 차이
+    - 컬렉션은 현재 자료구조가 포함하는 모든 값을 메모리에 저장하는 자료구조
+      즉, 컬렉션의 모든 요소는 컬렉션에 추가하기 전에 계산되어야 한다.(컬렉션에 요소를 추가, 삭제 가능)
+    - 스트림은 이론적으로 스트리밍 비디오처럼 요청할때만(필요할때만) 요소를 계산하는 고정된 자료구조다.(스트림에 요소를 추가하거나 제거할수 없음)
+    - 스트림은 한번만 탐색될수 있다. 즉, 한번 탐색한 요소를 다시 탐색하려면 초기 데이터 소스에서 새로운 스트림을 만들어야 한다.
+        (컬렉션처럼 반복 사용할수 있는 데이터 소스여야 한다. 데이터 소스가 I/O 채널이라면 소스를 반복사용할수 없으므로 새로운 스트림을 만들수 없다.)
+    ```java
+        List<String> names = Arrays.asList("Java8", "Lambdas", "In", "Action");
+        Stream<String> s = names.stream();
+        s.forEach(System.out::println);
+        // 스트림은 한 번 만 소비할 수 있으므로 아래 행의 주석을 제거하면 IllegalStateException이 발생
+        //s.forEach(System.out::println);
+    ```
